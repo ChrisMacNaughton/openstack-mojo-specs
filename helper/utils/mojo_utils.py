@@ -622,7 +622,7 @@ def upgrade_machine(app_name, unit, machine, machine_num):
 
 def update_machine_series(app_name, machine_num):
     cmd = [kiki.cmd(), 'run', '--machine',
-           machine_num, 'lsb_release', '-c', '-s']
+           machine_num, '--', 'lsb_release', '-c', '-s']
     codename = subprocess.check_output(cmd)
     if six.PY3:
         codename = codename.decode('utf-8')
