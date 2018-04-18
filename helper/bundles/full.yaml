@@ -357,3 +357,16 @@ xenial-pike:
 artful-pike:
   inherits: [ openstack-icehouse, ceilometer-mongodb, charm-ceilometer-gnocchi ]
   series: artful
+# queens
+xenial-queens:
+  inherits: [ openstack-icehouse, ceilometer-gnocchi ]
+  series: xenial
+  overrides:
+    openstack-origin: cloud:xenial-queens
+    source: cloud:xenial-queens
+bionic-queens:
+  inherits: xenial-queens
+  series: bionic
+  overrides:
+    openstack-origin: distro
+    source: distro
