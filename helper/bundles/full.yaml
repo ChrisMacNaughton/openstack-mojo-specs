@@ -362,11 +362,11 @@ xenial-queens:
   inherits: [ openstack-icehouse, ceilometer-gnocchi ]
   series: xenial
   overrides:
-    openstack-origin: cloud:xenial-queens
-    source: cloud:xenial-queens
+    openstack-origin: cloud:xenial-queens/proposed
+    source: cloud:xenial-queens/proposed
 bionic-queens:
   inherits: xenial-queens
   series: bionic
   overrides:
-    openstack-origin: distro
-    source: distro
+    openstack-origin: distro-proposed
+    source: distro-proposed
