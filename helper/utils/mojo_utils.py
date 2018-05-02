@@ -628,7 +628,8 @@ def clear_reactive_bootstrap(machine_num):
     cmd = [
         'juju', 'ssh', str(machine_num),
         'sudo', 'rm', '-f',
-        '/var/lib/juju/agents/unit*/charm/wheelhouse/.bootstrapped'
+        '/var/lib/juju/agents/unit*/charm/wheelhouse/.bootstrapped',
+        '/var/lib/juju/agents/unit*/.venv'
     ]
     subprocess.call(cmd)
 
