@@ -720,6 +720,13 @@ def upgrade_all_units(config, fail_on_missing_upgrade=True, juju_status=None):
                         "{} did not have an upgrade available from {}".format(
                             machine_id, config['from']))
             upgraded_machines.append(machine_id)
+    for (app_name, details) in juju_status['applications'].items():
+        for name, unit_details in details['units'].items():
+            try:
+                subprocess.call(["juju", "resolved", name])
+            except subprocess.CalledProcessError:
+                # maybe the unit isn't in an errored state
+                pass
 # End upgrade code
 
 
