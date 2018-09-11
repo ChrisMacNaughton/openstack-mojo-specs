@@ -408,6 +408,31 @@ def ssh_test(username, ip, vm_name, password=None, privkey=None):
         return False
 
 
+def dns_test(username, ip, vm_name, password=None, privkey=None,
+             domain='google.com'):
+    logging.info('Attempting to ssh to %s(%s)' % (vm_name, ip))
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    if privkey:
+        key = paramiko.RSAKey.from_private_key(StringIO(privkey))
+        ssh.connect(ip, username=username, password='', pkey=key)
+    else:
+        ssh.connect(ip, username=username, password=password)
+    stdin, stdout, stderr = ssh.exec_command('dig +short {}'.format(domain))
+    return_string = stdout.readlines()[0].strip()
+    exit_status = stdout.channel.recv_exit_status()
+    ssh.close()
+    if exit_status == 0:
+        logging.info('Dig on %s(%s) succesfull: %s' %
+                     (vm_name, ip, return_string))
+        return True
+    else:
+        logging.info(
+            'Dig on {}({}) failed (Process exited {})'.format(vm_name, ip,
+                                                              exit_status))
+        return False
+
+
 def boot_and_test(nova_client, neutron_client, image_name, flavor_name,
                   number, privkey, active_wait=180, cloudinit_wait=180,
                   ping_wait=180, boot_from_volume=False):
@@ -440,6 +465,8 @@ def boot_and_test(nova_client, neutron_client, image_name, flavor_name,
             ssh_test_args['privkey'] = privkey
         if not ssh_test(**ssh_test_args):
             raise Exception('SSH failed to instance at %s' % (ip))
+        if not dns_test(**ssh_test_args):
+            raise Exception("DNS test failed on instance %s" % (ip))
 
 
 def check_guest_connectivity(nova_client, ping_wait=180):

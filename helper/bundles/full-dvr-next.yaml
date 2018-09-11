@@ -129,6 +129,7 @@ openstack-icehouse:
       options:
         enable-local-dhcp-and-metadata: True
         bridge-mappings: physnet1:br-ex
+        dns-servers: 10.245.160.2
   relations:
   - [ neutron-api, mysql ]
   - [ neutron-api, rabbitmq-server ]
